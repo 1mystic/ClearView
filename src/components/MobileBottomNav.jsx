@@ -13,7 +13,7 @@ const navItems = [
   { label: 'Leaderboard', to: '/leaderboard', icon: (
     <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="17" width="4" height="5"/><rect x="9" y="12" width="4" height="10"/><rect x="16" y="7" width="4" height="15"/></svg>
   ) },
-  { label: 'Profile', to: '/user-dashboard', icon: (
+  { label: 'Profile', to: '/', icon: (
     <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M2 20c0-4 8-6 10-6s10 2 10 6"/></svg>
   ) },
 ];
