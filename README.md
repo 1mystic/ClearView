@@ -63,7 +63,7 @@ Unseen pollution from informal industries across India continues to contaminate 
 
 ## 🚀 Live App
 
-🌐 [Visit the Deployed Site](https://your-deployed-site-url.com)
+🌐 [Visit the Deployed Site](https://clearvieweco.netlify.app/)
 
 ---
 
