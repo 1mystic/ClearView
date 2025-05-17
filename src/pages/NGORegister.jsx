@@ -1,31 +1,15 @@
-import { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  User,
-  Building,
-  Upload,
-  Info,
-  Phone,
-} from "lucide-react";
-import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-} from "../components/ui/alert-dialog";
+import { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { Eye, EyeOff, Mail, Lock, User, Building, Upload, Info, Phone } from 'lucide-react';
+import { toast } from 'sonner';
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '../components/ui/alert-dialog';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import NavBar from "../components/Navbar";
-import Footer from "../components/Footer";
+import NavBar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { serverTimestamp } from "firebase/firestore";
-import MobileBottomNav from "../components/MobileBottomNav";
+import MobileBottomNav from '../components/MobileBottomNav';
 
 const NGORegister = () => {
   const navigate = useNavigate();
@@ -34,91 +18,95 @@ const NGORegister = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-
-  const [orgName, setOrgName] = useState("");
-  const [contactName, setContactName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [description, setDescription] = useState("");
-  const [regNumber, setRegNumber] = useState("");
+  
+  const [orgName, setOrgName] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [description, setDescription] = useState('');
+  const [regNumber, setRegNumber] = useState('');
   const [document, setDocument] = useState(null);
   const fileInputRef = useRef(null);
 
   const [errors, setErrors] = useState({
-    orgName: "",
-    contactName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-    regNumber: "",
-    document: "",
+    orgName: '',
+    contactName: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    regNumber: '',
+    document: ''
   });
 
   const validateForm = () => {
     let valid = true;
 
     const newErrors = {
-      orgName: "",
-      contactName: "",
-      email: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-      regNumber: "",
-      document: "",
+      orgName: '',
+      contactName: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+      regNumber: '',
+      document: ''
     };
 
     if (!orgName) {
-      newErrors.orgName = "Organization name is required";
+      newErrors.orgName = 'Organization name is required';
       valid = false;
     }
 
     if (!contactName) {
-      newErrors.contactName = "Contact person name is required";
+      newErrors.contactName = 'Contact person name is required';
       valid = false;
     }
 
     if (!email) {
-      newErrors.email = "Email is required";
+      newErrors.email = 'Email is required';
       valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email is invalid";
+    } 
+    else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Email is invalid';
       valid = false;
     }
 
     if (!phone) {
-      newErrors.phone = "Phone number is required";
+      newErrors.phone = 'Phone number is required';
       valid = false;
-    } else if (!/^\d{10}$/.test(phone.replace(/[^0-9]/g, ""))) {
-      newErrors.phone = "Please enter a valid 10-digit phone number";
+    } 
+    else if (!/^\d{10}$/.test(phone.replace(/[^0-9]/g, ''))) {
+      newErrors.phone = 'Please enter a valid 10-digit phone number';
       valid = false;
     }
 
     if (!regNumber) {
-      newErrors.regNumber = "Registration number is required";
+      newErrors.regNumber = 'Registration number is required';
       valid = false;
     }
 
     if (!document) {
-      newErrors.document = "Please upload your NGO registration certificate";
+      newErrors.document = 'Please upload your NGO registration certificate';
       valid = false;
     }
 
     if (!password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
       valid = false;
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } 
+    else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
       valid = false;
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = 'Please confirm your password';
       valid = false;
-    } else if (confirmPassword !== password) {
+    } 
+    else if (confirmPassword !== password) {
       newErrors.confirmPassword = "Passwords don't match";
       valid = false;
     }
@@ -135,30 +123,26 @@ const NGORegister = () => {
     }
 
     if (document.size > 5 * 1024 * 1024) {
-      setErrors({
-        ...errors,
-        document: "File size should not exceed 5MB",
-      });
-      return;
+        setErrors({
+          ...errors,
+          document: 'File size should not exceed 5MB'
+        });
+        return;
     }
 
     setErrors({
-      ...errors,
-      document: "",
+        ...errors,
+        document: ''
     });
-
+    
     setIsSubmitting(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);   
+    const user = userCredential.user;
 
-      const uploadedUrl = await handleFileChange();
+    const uploadedUrl = await handleFileChange();
 
-      await setDoc(doc(db, "users", user.uid), {
+    await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name: orgName,
         role: "ngo",
@@ -170,60 +154,61 @@ const NGORegister = () => {
         approvalStatus: "pending",
         docProofURL: uploadedUrl || "",
         points: 0,
-      });
-
-      setSuccessDialogOpen(true);
-
-      setOrgName("");
-      setContactName("");
-      setEmail("");
-      setPhone("");
-      setPassword("");
-      setConfirmPassword("");
-      setDescription("");
-      setRegNumber("");
-      setDocument(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-
-      toast.success("Registration submitted successfully!");
-    } catch (error) {
-      toast.error("Registration failed. Please try again.");
-      console.error("NGO Registration error:", error);
-    } finally {
-      setIsSubmitting(false);
+    });
+    
+    setSuccessDialogOpen(true);
+    
+    setOrgName('');
+    setContactName('');
+    setEmail('');
+    setPhone('');
+    setPassword('');
+    setConfirmPassword('');
+    setDescription('');
+    setRegNumber('');
+    setDocument(null);
+    if (fileInputRef.current) {
+        fileInputRef.current.value = '';
     }
+    
+    toast.success("Registration submitted successfully!");
+    } 
+    catch (error) {
+        toast.error('Registration failed. Please try again.');
+        console.error('NGO Registration error:', error);
+    } 
+    finally {
+        setIsSubmitting(false);
+    }
+    
   };
 
   const handleFileChange = async () => {
-    if (!document) return;
+    if (!document) return; 
 
     const formData = new FormData();
     formData.append("file", document);
-    formData.append("upload_preset", "clear-view-preset");
-    formData.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+    formData.append("upload_preset", "clear-view-preset"); 
+    formData.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME); 
 
     try {
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${
-          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-        }/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData,
+        });
 
-      const data = await response.json();
-      console.log("Cloudinary response:", data.secure_url, data.url, data);
-      toast.success("Image uploaded successfully!");
-      return data.secure_url;
-    } catch (err) {
-      console.error("Cloudinary upload error:", err);
-      toast.error("Failed to upload image.");
-      return null;
+        const data = await response.json();
+        console.log("Cloudinary response:", data.secure_url, data.url, data);
+        toast.success("Image uploaded successfully!");
+        return data.secure_url;
+    } 
+    catch (err) {
+        console.error("Cloudinary upload error:", err);
+        toast.error("Failed to upload image.");
+        return null;
     }
+      
+    
   };
 
   return (
@@ -234,262 +219,124 @@ const NGORegister = () => {
         <div className="w-full max-w-3xl modern-glass-ngo-register-card animate-fade-in animate-slide-up">
           <div className="text-center p-6 md:p-8 border-b modern-card-header">
             <h2 className="modern-title">Register your Organization/NGO</h2>
-            {/* <p className="modern-subtitle">Join Clear View to collaborate on environmental initiatives</p> */}
+            <p className="modern-subtitle">Join Clear View to collaborate on environmental initiatives</p>
           </div>
           <div className="p-6 md:p-8">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                {/* Organization Name Field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="orgName" className="modern-label">
-                    Organization Name*
-                  </label>
+                  <label htmlFor="orgName" className="modern-label">Organization Name*</label>
                   <div className="relative">
                     <Building className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                    <input
-                      id="orgName"
-                      type="text"
-                      placeholder="Your Organization PLC"
-                      className="modern-input"
-                      value={orgName}
-                      onChange={(e) => setOrgName(e.target.value)}
-                    />
+                    <input id="orgName" type="text" placeholder="Your Organization PLC" className="modern-input" value={orgName} onChange={(e) => setOrgName(e.target.value)} />
                   </div>
-                  {errors.orgName && (
-                    <p className="modern-error-text mt-1">{errors.orgName}</p>
-                  )}
+                  {errors.orgName && <p className="modern-error-text mt-1">{errors.orgName}</p>}
                 </div>
-
+                
+                {/* Contact Person Field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="contactName" className="modern-label">
-                    Contact Person*
-                  </label>
+                  <label htmlFor="contactName" className="modern-label">Contact Person*</label>
                   <div className="relative">
                     <User className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                    <input
-                      id="contactName"
-                      type="text"
-                      placeholder="Full Name"
-                      className="modern-input"
-                      value={contactName}
-                      onChange={(e) => setContactName(e.target.value)}
-                    />
+                    <input id="contactName" type="text" placeholder="Full Name" className="modern-input" value={contactName} onChange={(e) => setContactName(e.target.value)} />
                   </div>
-                  {errors.contactName && (
-                    <p className="modern-error-text mt-1">
-                      {errors.contactName}
-                    </p>
-                  )}
+                  {errors.contactName && <p className="modern-error-text mt-1">{errors.contactName}</p>}
                 </div>
 
+                {/* Email Field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="email" className="modern-label">
-                    Email Address*
-                  </label>
+                  <label htmlFor="email" className="modern-label">Email Address*</label>
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                    <input
-                      id="email"
-                      type="email"
-                      placeholder="contact@organization.com"
-                      className="modern-input"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <input id="email" type="email" placeholder="contact@organization.com" className="modern-input" value={email} onChange={(e) => setEmail(e.target.value)} />
                   </div>
-                  {errors.email && (
-                    <p className="modern-error-text mt-1">{errors.email}</p>
-                  )}
+                  {errors.email && <p className="modern-error-text mt-1">{errors.email}</p>}
                 </div>
 
+                {/* Phone Number Field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="phone" className="modern-label">
-                    Phone Number*
-                  </label>
+                  <label htmlFor="phone" className="modern-label">Phone Number*</label>
                   <div className="relative">
                     <Phone className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                    <input
-                      id="phone"
-                      type="tel"
-                      placeholder="e.g. 1234567890"
-                      className="modern-input"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
+                    <input id="phone" pattern="\d{10}" maxLength={10} type="tel" placeholder="e.g., 1234567890" className="modern-input" value={phone} onChange={(e) => setPhone(e.target.value)} />
                   </div>
-                  {errors.phone && (
-                    <p className="modern-error-text mt-1">{errors.phone}</p>
-                  )}
+                  {errors.phone && <p className="modern-error-text mt-1">{errors.phone}</p>}
                 </div>
               </div>
 
+              {/* Organization Description Field */}
               <div className="space-y-1.5">
-                <label htmlFor="description" className="modern-label">
-                  Organization Description
-                </label>
-                <textarea
-                  id="description"
-                  placeholder="Brief description of your organization's mission and activities"
-                  className="modern-textarea"
-                  rows={3}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
+                <label htmlFor="description" className="modern-label">Organization Description</label>
+                <textarea id="description" placeholder="Brief description of your organization's mission and activities" className="modern-textarea" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
               </div>
-
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                {/* Registration Number Field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="regNumber" className="modern-label">
-                    NGO Registration Number*
-                  </label>
+                  <label htmlFor="regNumber" className="modern-label">NGO Registration Number*</label>
                   <div className="relative">
                     <Info className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                    <input
-                      id="regNumber"
-                      type="text"
-                      placeholder="Your official registration ID"
-                      className="modern-input"
-                      value={regNumber}
-                      onChange={(e) => setRegNumber(e.target.value)}
-                    />
+                    <input id="regNumber" type="text" placeholder="Your official registration ID" className="modern-input" value={regNumber} onChange={(e) => setRegNumber(e.target.value)} />
                   </div>
-                  {errors.regNumber && (
-                    <p className="modern-error-text mt-1">{errors.regNumber}</p>
-                  )}
+                  {errors.regNumber && <p className="modern-error-text mt-1">{errors.regNumber}</p>}
                 </div>
 
+                {/* Registration Certificate Upload Field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="document" className="modern-label">
-                    Registration Certificate*
-                  </label>
+                  <label htmlFor="document" className="modern-label">Registration Certificate*</label>
                   <label htmlFor="document" className="modern-file-input-label">
                     <Upload className="h-5 w-5 modern-input-icon mr-2.5 flex-shrink-0" />
                     <span className="truncate block">
-                      {document
-                        ? document.name
-                        : "Upload certificate (PDF, JPG, PNG)"}
+                      {document ? document.name : 'Upload certificate (PDF, JPG, PNG)'}
                     </span>
                   </label>
-                  <input
-                    id="document"
-                    type="file"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    className="hidden"
-                    ref={fileInputRef}
-                    onChange={(e) => setDocument(e.target.files[0])}
-                  />
+                  <input id="document" type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" ref={fileInputRef} onChange={(e) => setDocument(e.target.files[0])} />
                   <p className="modern-input-hint">Max file size: 5MB</p>
-                  {errors.document && (
-                    <p className="modern-error-text mt-1">{errors.document}</p>
-                  )}
+                  {errors.document && <p className="modern-error-text mt-1">{errors.document}</p>}
                 </div>
               </div>
-
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 pt-2">
+                {/* Password Field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="password" className="modern-label">
-                    Password*
-                  </label>
+                  <label htmlFor="password" className="modern-label">Password*</label>
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                    <input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Choose a strong password"
-                      className="modern-input"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150"
-                      aria-label={
-                        showPassword ? "Hide password" : "Show password"
-                      }
-                    >
-                      {showPassword ? (
-                        <Eye className="h-5 w-5 modern-input-icon" />
-                      ) : (
-                        <EyeOff className="h-5 w-5 modern-input-icon" />
-                      )}
+                    <input id="password" type={showPassword ? "text" : "password"} placeholder="Choose a strong password" className="modern-input" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150" aria-label={showPassword ? "Hide password" : "Show password"}>
+                      {showPassword ? <EyeOff className="h-5 w-5 modern-input-icon" /> : <Eye className="h-5 w-5 modern-input-icon" />}
                     </button>
                   </div>
-                  {errors.password && (
-                    <p className="modern-error-text mt-1">{errors.password}</p>
-                  )}
+                  {errors.password && <p className="modern-error-text mt-1">{errors.password}</p>}
                 </div>
 
+                {/* Confirm Password Field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="confirmPassword" className="modern-label">
-                    Confirm Password*
-                  </label>
+                  <label htmlFor="confirmPassword" className="modern-label">Confirm Password*</label>
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                    <input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm your password"
-                      className="modern-input"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150"
-                      aria-label={
-                        showConfirmPassword ? "Hide password" : "Show password"
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <Eye className="h-5 w-5 modern-input-icon" />
-                      ) : (
-                        <EyeOff className="h-5 w-5 modern-input-icon" />
-                      )}
+                    <input id="confirmPassword" type={showConfirmPassword ? "text" : "password"} placeholder="Re-enter your password" className="modern-input" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                    <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150" aria-label={showConfirmPassword ? "Hide password" : "Show password"}>
+                      {showConfirmPassword ? <EyeOff className="h-5 w-5 modern-input-icon" /> : <Eye className="h-5 w-5 modern-input-icon" />}
                     </button>
                   </div>
-                  {errors.confirmPassword && (
-                    <p className="modern-error-text mt-1">
-                      {errors.confirmPassword}
-                    </p>
-                  )}
+                  {errors.confirmPassword && <p className="modern-error-text mt-1">{errors.confirmPassword}</p>}
                 </div>
               </div>
-
+              
               <div className="pt-4">
-                <button
-                  type="submit"
-                  className="modern-button w-full"
-                  disabled={isSubmitting}
-                >
+                <button type="submit" className="modern-button w-full" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
-                      <svg
-                        className="animate-spin -ml-1 mr-2.5 h-5 w-5 inline"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
+                      <svg className="animate-spin -ml-1 mr-2.5 h-5 w-5 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                       Submitting Application...
                     </>
                   ) : (
-                    "Submit Application"
+                    'Submit Application'
                   )}
                 </button>
               </div>
@@ -497,64 +344,42 @@ const NGORegister = () => {
           </div>
           <div className="p-6 md:p-8 border-t modern-card-footer text-center">
             <div className="modern-footer-text">
-              Already have an account?{" "}
-              <Link to="/login" className="modern-link">
-                Sign In
-              </Link>
+              Already have an account?{' '}
+              <Link to="/login" className="modern-link">Sign In</Link>
             </div>
           </div>
         </div>
 
-        <AlertDialog
-          open={successDialogOpen}
-          onOpenChange={setSuccessDialogOpen}
-        >
+        <AlertDialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
           <AlertDialogContent className="modern-alert-dialog-content">
             <AlertDialogHeader>
-              <AlertDialogTitle className="modern-alert-dialog-title">
-                Application Submitted!
-              </AlertDialogTitle>
+              <AlertDialogTitle className="modern-alert-dialog-title">Application Submitted!</AlertDialogTitle>
               <AlertDialogDescription className="modern-alert-dialog-description">
                 <div className="flex justify-center my-5">
                   <div className="modern-alert-icon-wrapper">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-10 w-10 text-emerald-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                 </div>
                 <p className="text-base">
-                  Your NGO registration has been submitted successfully. Our
-                  team will review your application and verification documents.
+                  Your NGO registration has been submitted successfully. Our team will review your application and verification documents.
                 </p>
                 <p className="mt-3 text-sm">
-                  You will receive an email notification once your application
-                  is approved.
+                  You will receive an email notification once your application is approved.
                 </p>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="flex justify-center mt-5">
               <Link to="/login">
-                <button className="modern-button modern-alert-button">
-                  Return to Login
-                </button>
+                <button className="modern-button modern-alert-button">Return to Login</button>
               </Link>
             </div>
           </AlertDialogContent>
         </AlertDialog>
       </main>
 
-      {/* <MobileBottomNav /> */}
+      <MobileBottomNav />
       <Footer />
       <style>{`
         /* General Page Animations */

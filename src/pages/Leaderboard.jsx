@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Card } from '../components/ui/card';
 import { db, auth } from "../config/firebase";
@@ -9,6 +8,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from 'react-router';
 import NavBar from '../components/Navbar';
 import Footer from '../components/Footer';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 const Leaderboard = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Leaderboard = () => {
             } 
             else {
               setUser({ id: userDoc.id, ...userDoc.data() });
-          }
+            }
           } 
           catch (error) {
             console.error("Error checking admin role:", error);
@@ -76,135 +76,110 @@ const Leaderboard = () => {
     <div className="flex flex-col min-h-screen">
         <NavBar />
   
-        <main className="flex-grow">
-          <div className="py-12 px-6 md:px-12 max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">Community Leaderboard</h1>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                See who's leading the charge in environmental reporting
-              </p>
-            </div>
+        <main className="flex-grow py-6 px-6 md:px-12 bg-gradient-to-br from-[#101c1a] via-[#1a2e2b] to-[#0e1a17] dark relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/5 dark:bg-black/30 backdrop-blur-2xl z-0 pointer-events-none" />
+          <div className="max-w-7xl mx-auto relative z-10 animate-fade-in animate-delay-100">
+            <h1 className="text-3xl font-bold mb-6 text-white drop-shadow-lg">Leaderboard</h1>
             
-            {user && userRank && (
-              <Card className="mb-10 p-8 bg-gradient-to-r from-[#6B8E23] to-[#8DAA53] text-white">
-                <div className="flex flex-col md:flex-row items-center justify-between">
-                  <div className="flex items-center mb-4 md:mb-0">
-                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-6">
-                      <span className="text-2xl font-bold">{userRank.rank}</span>
+            <div className="modern-glass-card mb-8 animate-slide-up animate-delay-200">
+              <div className="modern-card-content">
+                <h2 className="modern-card-title mb-4">Top Contributors</h2>
+                <div className="space-y-4">
+                  {leaderboardData.map((user, index) => (
+                    <div key={user.id} className="modern-leaderboard-item">
+                      <div className="modern-rank">{index + 1}</div>
+                      <div className="modern-user-info">
+                        <span className="modern-username">{user.name}</span>
+                        <span className="modern-points">{user.points} points</span>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-xl mb-1">Your Ranking</h3>
-                      <p className="opacity-90">Keep submitting reports to climb the leaderboard!</p>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <span className="block text-3xl font-bold">{userRank.count}</span>
-                    <span className="text-white/80">Reports</span>
-                  </div>
+                  ))}
                 </div>
-              </Card>
-            )}
-            
-            <Card>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="px-6 py-4 text-left font-bold">Rank</th>
-                      <th className="px-6 py-4 text-left font-bold">User</th>
-                      <th className="px-6 py-4 text-center font-bold">Points</th>
-                      <th className="px-6 py-4 text-center font-bold">Impact Score</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {leaderboardData.map((entry, index) => (
-                      <tr 
-                        key={index} 
-                        className={`border-b ${user && entry.name === user.name ? 'bg-[#F8FAEF]' : ''}`}
-                      >
-                        <td className="px-6 py-4">
-                          {index < 3 ? (
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white
-                              ${index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : 'bg-amber-700'}`}
-                            >
-                              {index + 1}
-                            </div>
-                          ) : (
-                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-medium">
-                              {index + 1}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 font-medium">
-                          {entry.name}
-                          {user && entry.name === user.name && (
-                            <span className="ml-2 text-xs bg-[#6B8E23] text-white px-2 py-0.5 rounded-full">
-                              You
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-center font-medium">{entry.points}</td>
-                        {/* <td className="px-6 py-4 text-center">
-                          <div className="w-full bg-gray-200 rounded-full h-2.5">
-                            <div 
-                              className="bg-[#6B8E23] h-2.5 rounded-full" 
-                              style={{ 
-                                width: `${Math.min(100, (entry.points / leaderboardData[0].points) * 100)}%` 
-                              }}
-                            ></div>
-                          </div>
-                        </td> */}
-
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex justify-center items-center">
-                            <div className="relative w-12 h-12">
-                              <svg className="transform -rotate-90" viewBox="0 0 36 36">
-                                <path
-                                  className="text-gray-300"
-                                  d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                />
-                                <path
-                                  className="text-[#6B8E23]"
-                                  d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                  strokeDasharray={`${Math.min(100, (entry.points / leaderboardData[0].points) * 100)}, 100`}
-                                />
-                              </svg>
-                              <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-gray-700">
-                                {Math.round((entry.points / leaderboardData[0].points) * 100)}%
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-
-                      </tr>
-                    ))}
-                    
-                    {leaderboardData.length === 0 && (
-                      <tr>
-                        <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
-                          No data available yet
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
               </div>
-            </Card>
+            </div>
           </div>
-          
         </main>
   
+        <MobileBottomNav />
         <Footer />
+
+        <style>{`
+          .modern-glass-card {
+            background: rgba(36, 41, 54, 0.85);
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 40px 0 rgba(0,0,0,0.25), 0 0 0 2px rgba(107,142,35,0.08);
+            border: 2.5px solid rgba(107,142,35,0.18);
+            backdrop-filter: blur(10px) saturate(1.3);
+            color: #f3f6fa;
+            transition: box-shadow 0.4s, border 0.4s, transform 0.4s, background 0.4s;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            padding: 2rem 1.5rem;
+          }
+          .modern-card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          .modern-card-title {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            text-shadow: 0 2px 12px #6B8E23;
+            margin-bottom: 0.25rem;
+          }
+          .modern-leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            border: 1px solid rgba(107,142,35,0.2);
+            transition: all 0.3s ease;
+          }
+          .modern-leaderboard-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px);
+            border-color: rgba(107,142,35,0.4);
+          }
+          .modern-rank {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #6B8E23 0%, #556B2F 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            margin-right: 1rem;
+            box-shadow: 0 4px 15px rgba(107,142,35,0.3);
+          }
+          .modern-user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex: 1;
+          }
+          .modern-username {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+          }
+          .modern-points {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6B8E23;
+            background: rgba(107,142,35,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+          }
+          .animate-delay-100 { animation-delay: 100ms; }
+          .animate-delay-200 { animation-delay: 200ms; }
+        `}</style>
     </div>
     
   );

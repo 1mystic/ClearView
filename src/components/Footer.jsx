@@ -1,4 +1,6 @@
 
+import { Link } from 'react-router-dom'; // Import Link
+
 function Footer() {
   return (
     <footer className="bg-[#1A1F2C] text-white">
@@ -28,7 +30,7 @@ function Footer() {
             </div>
             <div className="pt-6">
               <p className="text-gray-300 hover:text-white">
-                &copy; {new Date().getFullYear()} Clear View
+                &copy; {new Date().getFullYear()} Ecochain
               </p>
             </div>
           </div>
@@ -52,13 +54,13 @@ function Footer() {
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
             <ul className="space-y-4">    
               <li>
-                <a href="/" className="text-gray-300 hover:text-white">Privacy Policy</a>
+                <Link to="/about" className="text-gray-300 hover:text-white">About</Link>
               </li>
               <li>
-                <a href="/" className="text-gray-300 hover:text-white">Terms of Use</a>
+                <Link to="/how-to-use" className="text-gray-300 hover:text-white">How to Use</Link>
               </li>
               <li>
-                <a href="/" className="text-gray-300 hover:text-white">User support</a>
+                <Link to="/contribute" className="text-gray-300 hover:text-white">Contribute</Link>
               </li>
             </ul>
           </div>

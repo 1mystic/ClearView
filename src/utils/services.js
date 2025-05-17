@@ -73,15 +73,51 @@ export const getLeaderboard = async () => {
   return leaderboard;
 };
 
+export const getReportsByStatus = async (status) => {
+  try {
+    const q = query(collection(db, "reports"), where("status", "==", status));
+    const querySnapshot = await getDocs(q);
+    
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        latitude: data.location?.latitude || 0,
+        longitude: data.location?.longitude || 0,
+        timestamp: data.timestamp?.toDate?.() || new Date(),
+      };
+    });
+  } catch (error) {
+    console.error(`Error fetching ${status} reports:`, error);
+    return [];
+  }
+};
+
 export const getAllReports = async () => {
-  const querySnapshot = await getDocs(collection(db, "reports"));
+  try {
+    const querySnapshot = await getDocs(collection(db, "reports"));
+    const reports = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        latitude: data.location?.latitude || 0,
+        longitude: data.location?.longitude || 0,
+        timestamp: data.timestamp?.toDate?.() || new Date(),
+      };
+    });
 
-  const reports = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-
-  return reports;
+    // Filter for approved, auto-approved, or resolved reports
+    return reports.filter(report => 
+      report.status === 'approved' || 
+      report.status === 'resolved' ||
+      report.autoApproved === true
+    );
+  } catch (error) {
+    console.error("Error fetching reports:", error);
+    return [];
+  }
 };
 
 

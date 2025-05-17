@@ -1,67 +1,67 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import NavBar from "../components/Navbar";
-import Footer from "../components/Footer";
-import MobileBottomNav from "../components/MobileBottomNav";
+import NavBar from '../components/Navbar';
+import Footer from '../components/Footer';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 const Register = () => {
   const navigate = useNavigate();
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
 
   const validateForm = () => {
     let valid = true;
 
     const newErrors = {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
     };
 
     if (!name) {
-      newErrors.name = "Name is required";
+      newErrors.name = 'Name is required';
       valid = false;
     } else if (name.length < 2) {
-      newErrors.name = "Name must be at least 2 characters";
+      newErrors.name = 'Name must be at least 2 characters';
       valid = false;
     }
 
     if (!email) {
-      newErrors.email = "Email is required";
+      newErrors.email = 'Email is required';
       valid = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = 'Email is invalid';
       valid = false;
     }
 
     if (!password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
       valid = false;
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = 'Password must be at least 6 characters';
       valid = false;
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = 'Please confirm your password';
       valid = false;
     } else if (confirmPassword !== password) {
       newErrors.confirmPassword = "Passwords don't match";
@@ -74,15 +74,11 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);   
         const user = userCredential.user;
 
         await setDoc(doc(db, "users", user.uid), {
@@ -93,9 +89,11 @@ const Register = () => {
           points: 0,
         });
         navigate(`/user-dashboard/${user.uid}`);
-      } catch (error) {
-        console.error("Registration error:", error);
-      } finally {
+      } 
+      catch (error) {
+        console.error('Registration error:', error);
+      } 
+      finally {
         setIsSubmitting(false);
       }
     }
@@ -114,174 +112,152 @@ const Register = () => {
       <NavBar />
 
       <main className="flex-grow flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
-        <div className="w-full max-w-lg modern-glass-register-card animate-fade-in animate-slide-up">
-          <div className="text-center p-6 md:p-8 border-b modern-card-header">
-            <h2 className="modern-title">Create Your Account</h2>
-            {/* <p className="modern-subtitle">Join Clear View and help make a difference</p> */}
-          </div>
-          <div className="p-6 md:p-8">
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Name Field */}
-              <div className="space-y-1.5">
-                <label htmlFor="name" className="modern-label">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                  <input
-                    id="name"
-                    type="text"
-                    placeholder="Enter your full name"
-                    className="modern-input"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
+          <div className="w-full max-w-lg modern-glass-register-card animate-fade-in animate-slide-up">
+            <div className="text-center p-6 md:p-8 border-b modern-card-header">
+              <h2 className="modern-title">Create Your Account</h2>
+              <p className="modern-subtitle">Join Clear View and help make a difference</p>
+            </div>
+            <div className="p-6 md:p-8">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Name Field */}
+                <div className="space-y-1.5">
+                  <label htmlFor="name" className="modern-label">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
+                    <input
+                      id="name"
+                      type="text"
+                      placeholder="Enter your full name"
+                      className="modern-input"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  {errors.name && (
+                    <p className="modern-error-text mt-1">{errors.name}</p>
+                  )}
                 </div>
-                {errors.name && (
-                  <p className="modern-error-text mt-1">{errors.name}</p>
-                )}
-              </div>
-
-              {/* Email Field */}
-              <div className="space-y-1.5">
-                <label htmlFor="email" className="modern-label">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    className="modern-input"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+                
+                {/* Email Field */}
+                <div className="space-y-1.5">
+                  <label htmlFor="email" className="modern-label">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
+                    <input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      className="modern-input"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="modern-error-text mt-1">{errors.email}</p>
+                  )}
                 </div>
-                {errors.email && (
-                  <p className="modern-error-text mt-1">{errors.email}</p>
-                )}
-              </div>
-
-              {/* Password Field */}
-              <div className="space-y-1.5">
-                <label htmlFor="password" className="modern-label">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Choose a strong password"
-                    className="modern-input"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150"
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showPassword ? (
-                      <Eye className="h-5 w-5 modern-input-icon" />
-                    ) : (
-                      <EyeOff className="h-5 w-5 modern-input-icon" />
-                    )}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="modern-error-text mt-1">{errors.password}</p>
-                )}
-              </div>
-
-              {/* Confirm Password Field */}
-              <div className="space-y-1.5">
-                <label htmlFor="confirmPassword" className="modern-label">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                  <input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password"
-                    className="modern-input"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    onClick={toggleConfirmPasswordVisibility}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150"
-                    aria-label={
-                      showConfirmPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showConfirmPassword ? (
-                      <Eye className="h-5 w-5 modern-input-icon" />
-                    ) : (
-                      <EyeOff className="h-5 w-5 modern-input-icon" />
-                    )}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className="modern-error-text mt-1">
-                    {errors.confirmPassword}
-                  </p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="modern-button w-full mt-6"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-2.5 h-5 w-5 inline"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
+                
+                {/* Password Field */}
+                <div className="space-y-1.5">
+                  <label htmlFor="password" className="modern-label">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Choose a strong password"
+                      className="modern-input"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Creating Account...
-                  </>
-                ) : (
-                  "Sign Up"
-                )}
-              </button>
-            </form>
-          </div>
-          <div className="p-6 md:p-8 border-t modern-card-footer text-center">
-            <div className="modern-footer-text">
-              Already have an account?{" "}
-              <Link to="/login" className="modern-link">
-                Sign In
-              </Link>
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 modern-input-icon" />
+                      ) : (
+                        <Eye className="h-5 w-5 modern-input-icon" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="modern-error-text mt-1">{errors.password}</p>
+                  )}
+                </div>
+                
+                {/* Confirm Password Field */}
+                <div className="space-y-1.5">
+                  <label htmlFor="confirmPassword" className="modern-label">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
+                    <input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Re-enter your password"
+                      className="modern-input"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={toggleConfirmPasswordVisibility}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150"
+                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-5 w-5 modern-input-icon" />
+                      ) : (
+                        <Eye className="h-5 w-5 modern-input-icon" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="modern-error-text mt-1">{errors.confirmPassword}</p>
+                  )}
+                </div>
+                
+                <button
+                  type="submit"
+                  className="modern-button w-full mt-6"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2.5 h-5 w-5 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Creating Account...
+                    </>
+                  ) : (
+                    'Sign Up'
+                  )}
+                </button>
+              </form>
+            </div>
+            <div className="p-6 md:p-8 border-t modern-card-footer text-center">
+              <div className="modern-footer-text">
+                Already have an account?{' '}
+                <Link to="/login" className="modern-link">
+                  Sign In
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
       </main>
 
-      {/* <MobileBottomNav /> */}
+      <MobileBottomNav />
       <Footer />
       <style>{`
         /* General Page Animations (same as Login) */

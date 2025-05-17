@@ -1,5 +1,7 @@
 import { useLocation } from "react-router";
 import { useEffect } from "react";
+import MobileBottomNav from '../components/MobileBottomNav';
+import Footer from '../components/Footer';
 
 const NotFound = () => {
   const location = useLocation();
@@ -20,6 +22,8 @@ const NotFound = () => {
           Return to Home
         </a>
       </div>
+      <MobileBottomNav />
+      <Footer />
     </div>
   );
 };

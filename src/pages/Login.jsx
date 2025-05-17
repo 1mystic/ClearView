@@ -1,49 +1,48 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { auth, db } from "../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import NavBar from "../components/Navbar";
-import Footer from "../components/Footer";
-import MobileBottomNav from "../components/MobileBottomNav";
-import RegisterTypeDialog from "../components/RegisterTypeDialog";
+import NavBar from '../components/Navbar';
+import Footer from '../components/Footer';
+import { onAuthStateChanged } from "firebase/auth";
+import MobileBottomNav from '../components/MobileBottomNav';
 
 const Login = () => {
-  const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
   const navigate = useNavigate();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const [errors, setErrors] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const validateForm = () => {
     let valid = true;
 
     const newErrors = {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     };
 
     if (!email) {
-      newErrors.email = "Email is required";
+      newErrors.email = 'Email is required';
       valid = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = 'Email is invalid';
       valid = false;
     }
 
     if (!password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
       valid = false;
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = 'Password must be at least 6 characters';
       valid = false;
     }
 
@@ -54,23 +53,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Form submitted:");
+    console.log('Form submitted:');
 
     if (!validateForm()) {
       return;
     }
 
-    console.log("Form is valid, proceeding with login...");
-
+    console.log('Form is valid, proceeding with login...');
+    
     setIsSubmitting(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-      console.log("User signed in:", userCredential.user);
+      console.log('User signed in:', userCredential.user);
 
       const user = userCredential.user;
       const docSnap = await getDoc(doc(db, "users", user.uid));
@@ -79,19 +74,23 @@ const Login = () => {
         const userData = docSnap.data();
         const role = userData.role;
 
-        console.log("User role:", role);
+        console.log('User role:', role);
 
         if (role !== "admin") {
           navigate(`/user-dashboard/${user.uid}`);
-        } else {
-          navigate("/admin");
+        } 
+        else {
+          navigate('/admin');
         }
       }
-    } catch (error) {
-      console.error("Login error:", error);
-    } finally {
+    } 
+    catch (error) {
+      console.error('Login error:', error);
+    } 
+    finally {
       setIsSubmitting(false);
     }
+    
   };
 
   const togglePasswordVisibility = () => {
@@ -103,126 +102,101 @@ const Login = () => {
       <NavBar />
 
       <main className="flex-grow flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
-        {/* Optional: Add some subtle background animated shapes or particles here if desired */}
-        {/* <div className="absolute inset-0 z-0 opacity-10"> ... </div> */}
-
-        <div className="w-full max-w-md modern-glass-login-card animate-fade-in animate-slide-up">
-          <div className="text-center p-6 md:p-8 border-b modern-card-header">
-            <h2 className="modern-title">Welcome Back</h2>
-            {/* <p className="modern-subtitle">Sign in to continue your journey</p> */}
-          </div>
-          <div className="p-6 md:p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label htmlFor="email" className="modern-label">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    className="modern-input"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+          {/* Optional: Add some subtle background animated shapes or particles here if desired */}
+          {/* <div className="absolute inset-0 z-0 opacity-10"> ... </div> */}
+          
+          <div className="w-full max-w-md modern-glass-login-card animate-fade-in animate-slide-up">
+            <div className="text-center p-6 md:p-8 border-b modern-card-header">
+              <h2 className="modern-title">Welcome Back</h2>
+              <p className="modern-subtitle">Sign in to continue your journey</p>
+            </div>
+            <div className="p-6 md:p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label htmlFor="email" className="modern-label">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
+                    <input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      className="modern-input"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="modern-error-text mt-1.5">{errors.email}</p>
+                  )}
                 </div>
-                {errors.email && (
-                  <p className="modern-error-text mt-1.5">{errors.email}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="password" className="modern-label">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="modern-input"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150"
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showPassword ? (
-                      <Eye className="h-5 w-5 modern-input-icon" />
-                    ) : (
-                      <EyeOff className="h-5 w-5 modern-input-icon" />
-                    )}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="modern-error-text mt-1.5">{errors.password}</p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="modern-button w-full"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-2.5 h-5 w-5 inline"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
+                
+                <div className="space-y-2">
+                  <label htmlFor="password" className="modern-label">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 modern-input-icon" />
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      className="modern-input"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors duration-150"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Signing In...
-                  </>
-                ) : (
-                  "Sign In"
-                )}
-              </button>
-            </form>
-          </div>
-          <div className="p-6 md:p-8 border-t modern-card-footer text-center">
-            <div className="modern-footer-text">
-              Don't have an account?{" "}
-              <button
-                  className="modern-link"
-                  onClick={() => setRegisterDialogOpen(true)}
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 modern-input-icon" />
+                      ) : (
+                        <Eye className="h-5 w-5 modern-input-icon" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="modern-error-text mt-1.5">{errors.password}</p>
+                  )}
+                </div>
+                
+                <button
+                  type="submit"
+                  className="modern-button w-full"
+                  disabled={isSubmitting}
                 >
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2.5 h-5 w-5 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Signing In...
+                    </>
+                  ) : (
+                    'Sign In'
+                  )}
+                </button>
+              </form>
+            </div>
+            <div className="p-6 md:p-8 border-t modern-card-footer text-center">
+              <div className="modern-footer-text">
+                Don\'t have an account?{' '}
+                <Link to="/register" className="modern-link">
                   Sign Up Now
-              </button>
+                </Link>
+              </div>
             </div>
           </div>
-
-          <RegisterTypeDialog
-            isOpen={registerDialogOpen}
-            onOpenChange={setRegisterDialogOpen}
-          />
-        </div>
       </main>
 
-      <style>
-        {`
+      <MobileBottomNav />
+      <Footer />
+      <style>{`
         /* General Page Animations */
         .animate-fade-in { animation: fadeInAnimation 0.7s ease-out forwards; }
         .animate-slide-up { animation: slideUpAnimation 0.6s ease-out forwards; animation-delay: 0.1s; }
@@ -348,12 +322,7 @@ const Login = () => {
           text-decoration: underline;
           text-shadow: 0 0 8px rgba(137, 196, 244, 0.3);
         }
-      `}
-      </style>
-
-      {/* <MobileBottomNav /> */}
-      <Footer />
-      
+      `}</style>
     </div>
   );
 };

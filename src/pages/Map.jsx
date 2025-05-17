@@ -5,6 +5,7 @@ import { Card, CardContent } from '../components/ui/card';
 import 'leaflet/dist/leaflet.css';
 import NavBar from '../components/Navbar';
 import Footer from '../components/Footer';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 const Map = () => {
     const mapRef = useRef(null);
@@ -140,6 +141,7 @@ const Map = () => {
         
       </main>
 
+      <MobileBottomNav />
       <Footer />
     </div>
   );

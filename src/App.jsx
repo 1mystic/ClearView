@@ -13,6 +13,9 @@ import MapView from './pages/MapView'
 import Map from './pages/Map'
 import Leaderboard from './pages/Leaderboard'
 import NotFound from './pages/NotFound'
+import About from './pages/About'
+import HowToUse from './pages/HowToUse'
+import Contribute from './pages/Contribute'
 
 function App() {
 
@@ -30,9 +33,13 @@ function App() {
           <Route path="/ngo-invite" element={<NGOInvite />} />
           <Route path="/map-view" element={<MapView />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/how-to-use" element={<HowToUse />} />
+          <Route path="/contribute" element={<Contribute />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      
     </>
   )
 }

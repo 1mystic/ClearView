@@ -69,6 +69,9 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
+  font-family: 'Inter', 'Poppins', 'Segoe UI', 'system-ui', sans-serif;
+  font-size : 1rem;
+  
 }
 
 /* .eco-card {
@@ -120,6 +123,65 @@ body {
 .eco-button-secondary:hover {
   background-color: #6B8E23;
   color: white;
+}
+
+/* === Mobile Bottom Nav: Global Styles === */
+.mobile-bottom-nav {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    background: rgba(36, 41, 54, 0.92);
+    backdrop-filter: blur(12px) saturate(1.2);
+    box-shadow: 0 -2px 24px 0 #6B8E23, 0 0 0 2px #232a34;
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+    padding: 0.5rem 0.5rem 0.7rem 0.5rem;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .mobile-nav-item {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #d1d5db;
+    font-size: 0.98rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 1.2rem;
+    padding: 0.3rem 0.2rem 0.1rem 0.2rem;
+    transition: color 0.22s, background 0.22s, box-shadow 0.22s;
+    position: relative;
+  }
+  .mobile-nav-item .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.1rem;
+    font-size: 1.45rem;
+    color: #8BC34A;
+    transition: color 0.22s, filter 0.22s;
+  }
+  .mobile-nav-item .label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .mobile-nav-item:active, .mobile-nav-item:focus, .mobile-nav-item:hover {
+    background: linear-gradient(90deg, #232a34 0%, #6B8E23 100%);
+    color: #fff;
+    box-shadow: 0 2px 16px 0 #6B8E23;
+  }
+  .mobile-nav-item:active .icon, .mobile-nav-item:focus .icon, .mobile-nav-item:hover .icon {
+    color: #fff;
+    filter: drop-shadow(0 0 6px #8BC34A);
+  }
 }
 
 

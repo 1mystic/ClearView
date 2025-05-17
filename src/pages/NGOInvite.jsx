@@ -15,6 +15,7 @@ import NavBar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getNewNGOInvites, getNGObyId } from "../utils/services";
 import { Badge } from '../components/ui/badge';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 
 function NGOInvite() {
@@ -137,108 +138,230 @@ function NGOInvite() {
         <div className="flex flex-col min-h-screen">
         <NavBar />
 
-        <main className="flex-grow">
-            <div className="py-12 px-6 md:px-12">
-                <div className="max-w-7xl mx-auto">
-                    <h1 className="text-3xl font-bold mb-6">NGO Verification</h1>
+        <main className="flex-grow py-6 px-6 md:px-12 bg-gradient-to-br from-[#101c1a] via-[#1a2e2b] to-[#0e1a17] dark relative overflow-hidden">
+            <div className="absolute inset-0 bg-white/5 dark:bg-black/30 backdrop-blur-2xl z-0 pointer-events-none" />
+            <div className="max-w-7xl mx-auto relative z-10 animate-fade-in animate-delay-100">
+                <h1 className="text-3xl font-bold mb-6 text-white drop-shadow-lg">NGO Verification</h1>
 
-                    <div className="bg-white rounded-lg border shadow-sm mb-8">
-                        <div className="p-6">
-                        <h2 className="text-xl font-semibold mb-2">New NGO Invites</h2>
-                        <p className="text-muted-foreground">Manage and approve NGOs</p>
-                        </div>
-                        <Separator />
-                        <div className="p-6">
-                        <Table>
-                            <TableHeader>
-                            <TableRow>
-                                <TableHead>Organization</TableHead>
-                                <TableHead>Registration Number</TableHead>
-                                <TableHead>Contact Person</TableHead>
-                                <TableHead>Contact Number</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Actions</TableHead>
-                                <TableHead>View Doc</TableHead>
-                            </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                            {newInvites.length > 0 ? (
-                                newInvites.map((ngo) => (
-                                <TableRow key={ngo.id}>
-                                    <TableCell className="font-medium">{ngo.name}</TableCell>
-                                    <TableCell>{ngo.regNum}</TableCell>
-                                    <TableCell>{ngo.contactPerson}</TableCell>
-                                    <TableCell>
-                                    {ngo.contactNo}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge className={getStatusColor(ngo.approvalStatus)}>
-                                        {ngo.approvalStatus}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="icon">
-                                                {/* <MoreHorizontal className="h-4 w-4" /> */}
-                                                Change Status
-                                                <span className="sr-only">Open menu</span>
-                                            </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                            {/* <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                            <DropdownMenuItem className="cursor-pointer" 
-                                                    onClick={() => getNGObyId(ngo.id)
-                                                    .then((ngoDetails) => { console.log(ngoDetails) })}> 
-                                                <Eye className="mr-2 h-4 w-4" />
-                                                View details
-                                            </DropdownMenuItem>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuLabel>Change Status</DropdownMenuLabel> */}
-                                            <DropdownMenuItem 
-                                                onClick={() => changeStatus(ngo.id, 'approved')}
-                                                className="cursor-pointer"
-                                            >
-                                                <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                                                Approve
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem 
-                                                onClick={() => changeStatus(ngo.id, 'rejected')}
-                                                className="cursor-pointer"
-                                            >
-                                                <XCircle className="mr-2 h-4 w-4 text-red-600" />
-                                                Reject
-                                            </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Link
-                                            to={`${ngo.docProofURL}`}
-                                            className={`hover:text-[#F2FCE2] transition-colors`}
-                                            >
-                                            <Button>Document</Button>
-                                        </Link>
-                                    </TableCell>
-                                    
-                                </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                                    No new NGO invites found
+                <div className="modern-glass-card mb-8 animate-slide-up animate-delay-200">
+                    <div className="p-6">
+                    <h2 className="modern-card-title mb-2">New NGO Invites</h2>
+                    <p className="modern-card-desc">Manage and approve NGOs</p>
+                    </div>
+                    <Separator className="modern-separator" />
+                    <div className="p-6">
+                    <Table>
+                        <TableHeader>
+                        <TableRow>
+                            <TableHead>Organization</TableHead>
+                            <TableHead>Registration Number</TableHead>
+                            <TableHead>Contact Person</TableHead>
+                            <TableHead>Contact Number</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Actions</TableHead>
+                            <TableHead>View Doc</TableHead>
+                        </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                        {newInvites.length > 0 ? (
+                            newInvites.map((ngo) => (
+                            <TableRow key={ngo.id}>
+                                <TableCell className="font-medium">{ngo.name}</TableCell>
+                                <TableCell>{ngo.regNum}</TableCell>
+                                <TableCell>{ngo.contactPerson}</TableCell>
+                                <TableCell>{ngo.contactNo}</TableCell>
+                                <TableCell>
+                                    <Badge className={`modern-badge ${ngo.approvalStatus.toLowerCase()}`}>
+                                    {ngo.approvalStatus}
+                                    </Badge>
                                 </TableCell>
-                                </TableRow>
-                            )}
-                            </TableBody>
-                        </Table>
-                        </div>
+                                <TableCell>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" className="table-action-button change-status-button">
+                                            Change Status
+                                            <span className="sr-only">Open menu</span>
+                                        </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                        <DropdownMenuItem 
+                                            onClick={() => changeStatus(ngo.id, 'approved')}
+                                            className="cursor-pointer"
+                                        >
+                                            <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                                            Approve
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem 
+                                            onClick={() => changeStatus(ngo.id, 'rejected')}
+                                            className="cursor-pointer"
+                                        >
+                                            <XCircle className="mr-2 h-4 w-4 text-red-500" />
+                                            Reject
+                                        </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                                <TableCell>
+                                    <Link
+                                        to={`${ngo.docProofURL}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Button className="table-action-button view-doc-button">Document</Button>
+                                    </Link>
+                                </TableCell>
+                                
+                            </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                            <TableCell colSpan={7} className="text-center py-6 modern-table-empty">
+                                No new NGO invites found
+                            </TableCell>
+                            </TableRow>
+                        )}
+                        </TableBody>
+                    </Table>
                     </div>
                 </div>
-            </div>`
+            </div>
         </main>
 
+        <MobileBottomNav />
         <Footer />
+        <style>{`
+          /* General page animations */
+          .animate-fade-in { animation: fadeInAnimation 0.7s ease-out forwards; }
+          .animate-slide-up { animation: slideUpAnimation 0.6s ease-out forwards; }
+          .animate-delay-100 { animation-delay: 100ms; }
+          .animate-delay-200 { animation-delay: 200ms; }
+
+          @keyframes fadeInAnimation { from { opacity: 0; } to { opacity: 1; } }
+          @keyframes slideUpAnimation { from { transform: translateY(25px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+          /* Modern Glass Card */
+          .modern-glass-card {
+            background: rgba(30, 35, 46, 0.8); /* Darker base for card */
+            border-radius: 1.25rem; /* 20px */
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3), 0 0 0 1px rgba(107,142,35,0.15);
+            border: 1.5px solid rgba(107,142,35,0.25);
+            backdrop-filter: blur(12px) saturate(1.5);
+            color: #e4e7eb; /* Light gray text */
+            transition: box-shadow 0.3s, border 0.3s, transform 0.3s;
+          }
+          .modern-glass-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px 0 rgba(0,0,0,0.35), 0 0 0 1px rgba(107,142,35,0.25);
+          }
+          .modern-card-title {
+            color: #ffffff;
+            font-size: 1.4rem; /* Slightly larger */
+            font-weight: 700;
+            text-shadow: 0 1px 5px rgba(107,142,35,0.4);
+          }
+          .modern-card-desc {
+            color: #b0b8c4; /* Softer light gray */
+            font-size: 0.95rem;
+          }
+          .modern-separator {
+            background-color: rgba(107,142,35,0.25) !important;
+          }
+
+          /* Table Styling */
+          /* Make sure these selectors are specific enough */
+          .modern-glass-card table { width: 100%; border-collapse: separate; border-spacing: 0; }
+          .modern-glass-card th, .modern-glass-card td {
+            padding: 0.9rem 1rem; /* Adjusted padding */
+            text-align: left;
+            border-bottom: 1px solid rgba(107,142,35,0.2);
+            color: #c8cdd3; /* Default cell text color */
+          }
+          .modern-glass-card th {
+            background-color: rgba(107,142,35,0.15);
+            color: #e4e7eb; /* Header text color */
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+          }
+          .modern-glass-card tr:last-child td { border-bottom: none; }
+          .modern-glass-card tbody tr:hover {
+            background-color: rgba(107,142,35,0.1);
+            transition: background-color 0.2s ease-in-out;
+          }
+          .modern-glass-card td.font-medium { color: #e4e7eb; font-weight:500; }
+          .modern-table-empty { color: #8a919b !important; font-style: italic; }
+          
+          /* Badge Styling */
+          .modern-badge {
+            padding: 0.3rem 0.7rem;
+            border-radius: 0.75rem; /* 12px */
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+          }
+          .modern-badge.pending { background-color: rgba(255, 193, 7, 0.15); color: #ffc107; border-color: rgba(255,193,7,0.3); }
+          .modern-badge.approved { background-color: rgba(76, 175, 80, 0.15); color: #4caf50; border-color: rgba(76,175,80,0.3); }
+          .modern-badge.rejected { background-color: rgba(244, 67, 54, 0.15); color: #f44336; border-color: rgba(244,67,54,0.3); }
+
+          /* Table Action Buttons */
+          .table-action-button {
+            background-color: rgba(107,142,35,0.2);
+            color: #c8cdd3;
+            border: 1px solid rgba(107,142,35,0.4);
+            border-radius: 0.4rem; /* 6px */
+            padding: 0.4rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+          }
+          .table-action-button:hover {
+            background-color: rgba(107,142,35,0.4);
+            color: #ffffff;
+            border-color: rgba(107,142,35,0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+          }
+          .table-action-button.change-status-button { /* More specific if needed */
+            min-width: auto; /* Let it size to content */
+          }
+          .table-action-button.view-doc-button {
+             /* slightly different styling if needed */
+          }
+
+          /* Dropdown Menu Content Styling */
+          /* Using specific selector to target shadcn/radix dropdown */
+          div[data-radix-popper-content-wrapper][style*="z-index: 50"] div[role="menu"] {
+            background-color: #2a303c !important; /* Darker slate for menu */
+            border: 1px solid rgba(107,142,35,0.4) !important;
+            border-radius: 0.6rem !important; /* 10px */
+            box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+            padding: 0.4rem !important;
+          }
+          div[data-radix-popper-content-wrapper][style*="z-index: 50"] div[role="menuitem"] {
+            color: #c8cdd3 !important;
+            border-radius: 0.4rem; /* 6px */
+            padding: 0.5rem 0.8rem !important;
+            font-size: 0.85rem;
+            transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+          }
+          div[data-radix-popper-content-wrapper][style*="z-index: 50"] div[role="menuitem"]:hover,
+          div[data-radix-popper-content-wrapper][style*="z-index: 50"] div[role="menuitem\"][data-highlighted] {
+            background-color: rgba(107,142,35,0.3) !important;
+            color: #ffffff !important;
+          }
+          div[data-radix-popper-content-wrapper][style*="z-index: 50"] div[role="separator"] {
+            background-color: rgba(107,142,35,0.25) !important;
+            margin: 0.4rem 0 !important;
+          }
+          
+          /* Ensure icon colors in dropdown are visible */
+          div[data-radix-popper-content-wrapper] .lucide-check-circle { color: #4caf50 !important; }
+          div[data-radix-popper-content-wrapper] .lucide-x-circle { color: #f44336 !important; }
+
+        `}</style>
         </div>
     )
 }

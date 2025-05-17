@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { db, auth } from "../config/firebase";
 import { signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -29,15 +29,12 @@ function Navbar() {
           if (userDoc.exists()) {
             const userData = { id: userDoc.id, ...userDoc.data() };
             setUser(userData);
-
             if (userData.role === "admin") {
               setIsAdmin(true);
-            } 
-            else {
+            } else {
               setIsAdmin(false);
             }
-          } 
-          else {
+          } else {
             setUser({ uid: currentUser.uid });
             setIsAdmin(false);
           }
@@ -92,20 +89,18 @@ function Navbar() {
 
   return (
     <>
-
       <header className="bg-slate-900/90 backdrop-blur-md text-slate-200 py-3 sm:py-4 px-6 md:px-12 shadow-lg border-b border-slate-700/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Button className="flex items-center space-x-3 cursor-pointer">
+          <Link to="/" className="flex items-center space-x-3 cursor-pointer">
             <img
               src="/logo.svg"
               alt="Logo"
               className="h-8 w-8 sm:h-9 sm:w-9"
             />
-
             <span className="font-semibold text-xl sm:text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-green-400">
               Clear View
             </span>
-          </Button>
+          </Link>
 
           <nav className="hidden md:flex items-center space-x-5 lg:space-x-7">
             {!isAuthenticated && (
@@ -122,7 +117,7 @@ function Navbar() {
                 <Link to="/leaderboard" className={navLinkClasses("/leaderboard")}>Leaderboard</Link>
               </>
             )}
-            {isAuthenticated && !isAdmin && user?.uid && (
+            {isAuthenticated && !isAdmin && user?.id && (
               <>
                 <Link to={`/user-dashboard/${user.id}`} className={navLinkClasses(`/user-dashboard/${user.id}`)}>Dashboard</Link>
                 <Link to="/map-view" className={navLinkClasses("/map-view")}>Map</Link>
@@ -158,18 +153,14 @@ function Navbar() {
             )}
           </div>
         </div>
-
       </header>
 
       <RegisterTypeDialog 
           isOpen={registerDialogOpen}
           onOpenChange={setRegisterDialogOpen}
         />
-
-      
-      <style jsx>
-        {`
-
+    
+    <style jsx>{`
       .login, .logout {
         padding: 0.55rem 1.35rem;
         border-radius: 50px;
@@ -184,15 +175,11 @@ function Navbar() {
         white-space: nowrap;
       }
 
-
-
       .login {
         background-color: rgba(255, 255, 255, 0.06);
         border-color: rgba(255, 255, 255, 0.15);
         color: #D1D5DB;
       }
-
-
 
       .login:hover {
         background-color: rgba(255, 255, 255, 0.1);
@@ -202,8 +189,6 @@ function Navbar() {
         box-shadow: 0 3px 10px rgba(107, 142, 35, 0.1);
       }
 
-
-
       .logout {
         background-image: linear-gradient(100deg,rgb(84, 175, 54), #86A364);
         color: white;
@@ -211,24 +196,18 @@ function Navbar() {
         border: none;
       }
 
-
-
       .logout:hover {
         background-image: linear-gradient(100deg, #556B2F, #6B8E23);
         transform: translateY(-1.5px) scale(1.02);
         box-shadow: 0 6px 18px rgba(85, 107, 47, 0.3), 0 2px 5px rgba(0,0,0,0.15);
       }
-
       .logout:active {
         transform: translateY(0px) scale(0.98);
         box-shadow: 0 2px 8px rgba(85, 107, 47, 0.25);
       }
-
       `}
-
     </style>
     </>
-    
   )
 }
 
