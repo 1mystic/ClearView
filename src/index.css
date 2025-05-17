@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+:root {
+  --background: 60 30% 98%;
+  --foreground: 222.2 84% 4.9%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+
+  --primary: 82 61% 34%;
+  --primary-foreground: 60 30% 96%;
+
+  --secondary: 60 30% 96%;
+  --secondary-foreground: 82 61% 34%;
+
+  --muted: 60 15% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --accent: 82 45% 48%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 82 61% 34%;
+
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 222 47% 11%;
+  --foreground: 60 30% 96%;
+
+  --card: 222 47% 11%;
+  --card-foreground: 60 30% 96%;
+
+  --popover: 222 47% 11%;
+  --popover-foreground: 60 30% 96%;
+
+  --primary: 82 61% 34%;
+  --primary-foreground: 60 30% 96%;
+
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 60 30% 96%;
+
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+
+  --accent: 82 45% 48%;
+  --accent-foreground: 60 30% 96%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 60 30% 96%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 82 61% 34%;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', 'Poppins', 'Segoe UI', 'system-ui', sans-serif;
+  font-size : 1rem;
+  
+}
+
+/* .eco-card {
+  @apply bg-white rounded-xl shadow-md p-6 border border-gray-100;
+}
+
+.eco-button-primary {
+  @apply bg-[#6B8E23] hover:bg-[#556B2F] text-white font-semibold py-3 px-6 rounded-full transition-colors;
+}
+
+.eco-button-secondary {
+  @apply bg-transparent border-2 border-[#6B8E23] text-[#6B8E23] hover:bg-[#6B8E23] hover:text-white font-semibold py-3 px-6 rounded-full transition-colors;
+}  */
+
+.eco-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  border: 1px solid #f3f4f6;
+}
+
+.eco-button-primary {
+  background-color: #6B8E23;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.eco-button-primary:hover {
+  background-color: #556B2F;
+}
+
+.eco-button-secondary {
+  background-color: transparent;
+  border: 2px solid #6B8E23;
+  color: #6B8E23;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.eco-button-secondary:hover {
+  background-color: #6B8E23;
+  color: white;
+}
+
+/* === Mobile Bottom Nav: Global Styles === */
+.mobile-bottom-nav {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    background: rgba(36, 41, 54, 0.92);
+    backdrop-filter: blur(12px) saturate(1.2);
+    box-shadow: 0 -2px 24px 0 #6B8E23, 0 0 0 2px #232a34;
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+    padding: 0.5rem 0.5rem 0.7rem 0.5rem;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .mobile-nav-item {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #d1d5db;
+    font-size: 0.98rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 1.2rem;
+    padding: 0.3rem 0.2rem 0.1rem 0.2rem;
+    transition: color 0.22s, background 0.22s, box-shadow 0.22s;
+    position: relative;
+  }
+  .mobile-nav-item .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.1rem;
+    font-size: 1.45rem;
+    color: #8BC34A;
+    transition: color 0.22s, filter 0.22s;
+  }
+  .mobile-nav-item .label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .mobile-nav-item:active, .mobile-nav-item:focus, .mobile-nav-item:hover {
+    background: linear-gradient(90deg, #232a34 0%, #6B8E23 100%);
+    color: #fff;
+    box-shadow: 0 2px 16px 0 #6B8E23;
+  }
+  .mobile-nav-item:active .icon, .mobile-nav-item:focus .icon, .mobile-nav-item:hover .icon {
+    color: #fff;
+    filter: drop-shadow(0 0 6px #8BC34A);
+  }
+}
+
+
+
