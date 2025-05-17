@@ -112,6 +112,7 @@ export const getAllReports = async () => {
     return reports.filter(report => 
       report.status === 'approved' || 
       report.status === 'resolved' ||
+      report.status === 'pending' ||
       report.autoApproved === true
     );
   } catch (error) {

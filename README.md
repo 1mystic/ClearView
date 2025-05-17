@@ -19,7 +19,7 @@ Unseen pollution from informal industries across India continues to contaminate 
 
 ---
 
-## ⚡ Key Features (Hackathon MVP – Built in 24 Hours)
+## ⚡ Key Features (Hackathon MVP – Built under 72 Hours)
 
 - 📸 **Simple Reporting Interface**: Submit pollution reports via a mobile-friendly form. Auto-captures geolocation. Supports image upload.
 - 🗺️ **Geotagged Hotspot Map**: Displays reports on a real-time, interactive Leaflet map.
