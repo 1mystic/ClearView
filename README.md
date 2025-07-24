@@ -23,7 +23,7 @@ Unseen pollution from informal industries across India continues to contaminate 
 
 - 📸 **Simple Reporting Interface**: Submit pollution reports via a mobile-friendly form. Auto-captures geolocation. Supports image upload.
 - 🗺️ **Geotagged Hotspot Map**: Displays reports on a real-time, interactive Leaflet map.
-- 🧠 **AI-Powered Image Classification**: Uses TensorFlow MobileNet to detect pollution in submitted photos.
+- 🧠 **Automatic Image Classification**: Uses TensorFlow MobileNet to detect pollution in submitted photos.
 - 🔍 **Filtering and Clustering**: Filter by pollution type, date range. Visual indicators for high-density zones.
 - 🔐 **User Authentication**: Basic login/signup with Firebase. NGOs can apply for verification.
 - 🧾 **Dashboards**: Personal dashboards for users, NGOs, and admins to track or manage reports.
@@ -82,7 +82,7 @@ Unseen pollution from informal industries across India continues to contaminate 
 - [Cloud Firestore](https://firebase.google.com/products/firestore) for data storage
 - [Firebase Hosting](https://firebase.google.com/products/hosting)
 
-**AI Integration:**
+**ML Model Integration:**
 
 - [TensorFlow.js](https://www.tensorflow.org/js) with MobileNet for pollution image classification
 
@@ -92,7 +92,7 @@ Unseen pollution from informal industries across India continues to contaminate 
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/clear-view.git
+git clone https://github.com/yourusername/ClearView.git
 cd clear-view
 
 # 2. Install dependencies
@@ -108,8 +108,6 @@ npm run dev
 
 ## 🤝 Contributing (Coming soon)
 
-We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) to get started.
-
 ---
 
 ## 📜 License (Not yet licensed)
@@ -122,13 +120,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 - This project was built during the Hackathon Hack Eclipse
 - Special thanks to Vighnesh for his mentoring
-
----
-
-## 🧑‍💻 Team
-- [Atharv Khare](https://github.com/1mystic)
-- [Deebhika Kumaran](https://github.com/deebhikakumaran/Clear-View)
-- [Sumit Kumar](https://github.com/sumitkr2000)
-- [Bappaditya](https://github.com/Bappaditya13)
 
 ---
